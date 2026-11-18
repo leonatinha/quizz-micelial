@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rede Micelial de Caminhos</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React & ReactDOM CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- Babel para compilar JSX no navegador -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="bg-gradient-to-b from-[#A8D5E2] via-[#6C5B7B] to-[#2A1D34] text-[#F3ECF5] min-h-screen flex flex-col items-center justify-center p-6">
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        // Perguntas estruturadas com as 3 opções de cores (Verde, Amarelo, Vermelho) e explicações
+        const questionData = [
+          {
+            id: 1,
+            text: "🍄 Com o que você prefere interagir no seu dia a dia profissional?",
+            category: "Com o que trabalhar",
+            options: [
+              { color: "green", label: "🟢 Verde (Alta Afinidade)", desc: "Pessoas, crianças, pacientes, animais ou comunidades em projetos colaborativos." },
+              { color: "yellow", label: "🟡 Amarelo (Afinidade Moderada)", desc: "Livros, dados, números, relatórios estruturados e rotinas organizadas." },
+              { color: "red", label: "🔴 Vermelho (Baixa Afinidade)", desc: "Máquinas pesadas, burocracia financeira estrita ou tarefas repetitivas isoladas." }
+            ]
+          },
+          {
+            id: 2,
+            text: "🌿 Que tipo de atividade faz os seus olhos brilharem?",
+            category: "Fazendo quê...",
+            options: [
+              { color: "green", label: "🟢 Verde (Alta Afinidade)", desc: "Criar, desenhar, escrever, planejar estratégias e resolver problemas complexos." },
+              { color: "yellow", label: "🟡 Amarelo (Afinidade Moderada)", desc: "Coordenar tarefas já estabelecidas e manter processos correntes funcionando." },
+              { color: "red", label: "🔴 Vermelho (Baixa Afinidade)", desc: "Trabalhos estritamente mecânicos sem nenhuma autonomia de criação." }
+            ]
+          },
+          {
+            id: 3,
+            text: "✨ Em qual ambiente de trabalho você se sente mais viva e produtiva?",
+            category: "Onde trabalhar",
+            options: [
+              { color: "green", label: "🟢 Verde (Alta Afinidade)", desc: "Ambiente descontraído, colaborativo, criativo ou home office flexível." },
+              { color: "yellow", label: "🟡 Amarelo (Afinidade Moderada)", desc: "Escritórios tradicionais com regras claras, estáveis e previsíveis." },
+              { color: "red", label: "🔴 Vermelho (Baixa Afinidade)", desc: "Ambientes altamente competitivos, rígidos, fechados ou de grande pressão hostil." }
+            ]
+          },
+          {
+            id: 4,
+            text: "💡 O que você mais deseja obter com o seu trabalho?",
+            category: "O que deseja obter",
+            options: [
+              { color: "green", label: "🟢 Verde (Alta Afinidade)", desc: "Autossatisfação, aprendizado contínuo, impacto social e liberdade de expressão." },
+              { color: "yellow", label: "🟡 Amarelo (Afinidade Moderada)", desc: "Estabilidade financeira segura e previsibilidade a médio prazo." },
+              { color: "red", label: "🔴 Vermelho (Baixa Afinidade)", desc: "Acúmulo de status corporativo competitivo ou busca incessante por prestígio." }
+            ]
+          }
+        ];
+
+        function App() {
+          const [currentStep, setCurrentStep] = useState(0);
+          const [userAnswers, setUserAnswers] = useState([]);
+          const [finalResult, setFinalResult] = useState(null);
+          const [isEvaluating, setIsEvaluating] = useState(false);
+
+          const handleOptionSelect = (option) => {
+            const newAnswers = [...userAnswers, option.color];
+            setUserAnswers(newAnswers);
+
+            if (currentStep < questionData.length - 1) {
+              setCurrentStep(currentStep + 1);
+            } else {
+              setIsEvaluating(true);
+              setTimeout(() => {
+                const greenCount = newAnswers.filter(a => a === 'green').length;
+                let resultText = greenCount >= 3 
+                  ? "🍄 Perfil Rede Micelial Verde: Suas escolhas apontam para forte afinidade com carreiras humanizadas, criativas e de alto impacto colaborativo (como Inovação Social, Gestão de Projetos Culturais, Comunicação e Educação). Suas raízes buscam propósito e liberdade de ação!"
+                  : "🌿 Perfil Conector Equilibrado: Você combina o pragmatismo das áreas estruturadas com a flexibilidade orgânica. Transições para áreas de estratégia, produtos, curadoria e design de processos são excelentes rotas para o seu momento profissional.";
+                setFinalResult(resultText);
+                setIsEvaluating(false);
+              }, 1500);
+            }
+          };
+
+          const resetQuiz = () => {
+            setCurrentStep(0);
+            setUserAnswers([]);
+            setFinalResult(null);
+          };
+
+          return (
+            <div className="w-full flex flex-col items-center justify-center">
+              <header className="mb-8 text-center z-10 max-w-lg">
+                <div className="inline-block px-4 py-1 mb-3 text-xs font-bold uppercase tracking-widest bg-[#F78888] text-white rounded-full shadow-md border border-white/30">
+                  MÉTODO DO SEMÁFORO • REDE MICELIAL
+                </div>
+                <h1 className="text-3xl md:text-4xl font-extrabold text-[#F3ECF5] font-serif mb-2 drop-shadow-md">
+                  🟢🟡🔴 Rede Micelial de Caminhos
+                </h1>
+                <p className="text-sm md:text-base text-[#F3ECF5]/90">
+                  Mapeie as suas rotas profissionais escolhendo entre as cores do semáforo.
+                </p>
+              </header>
+
+              <main className="max-w-xl w-full bg-[#2A1D34]/90 backdrop-blur-md p-8 rounded-[2.5rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.6)] border-4 border-[#7E459B]/50 z-10 relative">
+                {!finalResult && !isEvaluating ? (
+                  <div>
+                    <div className="flex items-center justify-between mb-6">
+                      <span className="text-xs font-bold tracking-wider text-[#F78888] uppercase bg-[#F78888]/20 px-3.5 py-1.5 rounded-xl border border-[#F78888]/40">
+                        {questionData[currentStep].category} ({currentStep + 1}/{questionData.length})
+                      </span>
+                      <div className="w-1/3 h-2.5 bg-[#1D1424] rounded-full overflow-hidden border border-[#7E459B]/30">
+                         <div className="h-full bg-gradient-to-r from-green-400 via-yellow-400 to-red-400 transition-all duration-300" style={{ width: `${((currentStep + 1) / questionData.length) * 100}%` }}></div>
+                      </div>
+                    </div>
+
+                    <h2 className="text-xl md:text-2xl font-bold mb-6 leading-snug text-[#F3ECF5]">
+                      {questionData[currentStep].text}
+                    </h2>
+
+                    <div className="grid grid-cols-1 gap-4">
+                      {questionData[currentStep].options.map((option, index) => {
+                        let borderStyle = "border-[#7E459B]/40 hover:border-white";
+                        let bgStyle = "bg-[#1D1424]/80 hover:bg-[#7E459B]/30";
+                        let indicatorColor = "bg-gray-400";
+
+                        if (option.color === 'green') {
+                          indicatorColor = "bg-green-500 shadow-[0_0_10px_#22c55e]";
+                          borderStyle = "border-green-500/40 hover:border-green-400";
+                          bgStyle = "bg-[#1D1424]/80 hover:bg-green-950/30";
+                        } else if (option.color === 'yellow') {
+                          indicatorColor = "bg-yellow-400 shadow-[0_0_10px_#eab308]";
+                          borderStyle = "border-yellow-500/40 hover:border-yellow-400";
+                          bgStyle = "bg-[#1D1424]/80 hover:bg-yellow-950/30";
+                        } else if (option.color === 'red') {
+                          indicatorColor = "bg-red-500 shadow-[0_0_10px_#ef4444]";
+                          borderStyle = "border-red-500/40 hover:border-red-400";
+                          bgStyle = "bg-[#1D1424]/80 hover:bg-red-950/30";
+                        }
+
+                        return (
+                          <button
+                            key={index}
+                            onClick={() => handleOptionSelect(option)}
+                            className={`w-full text-left p-4 rounded-2xl ${bgStyle} border-2 ${borderStyle} transition-all group flex flex-col gap-1 shadow-md hover:shadow-lg cursor-pointer`}
+                          >
+                            <div className="flex items-center gap-3">
+                              <span className={`w-4 h-4 rounded-full flex-shrink-0 ${indicatorColor}`}></span>
+                              <span className="font-bold text-white text-sm md:text-base">{option.label}</span>
+                            </div>
+                            <p className="text-xs md:text-sm text-[#F3ECF5]/80 pl-7">{option.desc}</p>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ) : isEvaluating ? (
+                  <div className="text-center py-16">
+                    <div className="inline-block w-16 h-16 border-4 border-[#7E459B] border-t-[#F78888] rounded-full animate-spin mb-6"></div>
+                    <p className="text-xl text-[#F3ECF5] font-bold">Processando o semáforo de afinidades...</p>
+                    <p className="text-sm text-[#F3ECF5]/70 mt-2">Cruzando as cores escolhidas nas dimensões...</p>
+                  </div>
+                ) : (
+                  <div className="text-center">
+                    <div className="text-4xl mb-3">🟢✨</div>
+                    <h2 className="text-2xl font-bold font-serif mb-4 text-[#F3ECF5]">Mapeamento Concluído</h2>
+                    <div className="p-6 bg-[#1D1424] border-2 border-green-500/60 rounded-2xl mb-6 text-left shadow-inner">
+                      <p className="text-base leading-relaxed text-[#F3ECF5] font-medium">{finalResult}</p>
+                    </div>
+                     <p className="text-xs text-[#F3ECF5]/60 mb-6 italic">Lembre-se: este resultado simula a base de dados e a IA. A validação humana garante a precisão final!</p>
+                    <button
+                      onClick={resetQuiz}
+                      className="px-8 py-3.5 bg-[#F78888] hover:bg-[#F78888]/90 text-white font-bold rounded-2xl transition-all shadow-lg text-base inline-flex items-center gap-2 transform hover:-translate-y-0.5 cursor-pointer"
+                    >
+                      <span>🔄</span> Refazer o Semáforo
+                    </button>
+                  </div>
+                )}
+              </main>
+
+              <footer className="mt-12 text-center text-xs text-[#F3ECF5]/70 z-10 font-medium tracking-wide">
+                 Rede Micelial de Caminhos • Projeto Final Reprograma 🍄🌿
+              </footer>
+            </div>
+          );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
